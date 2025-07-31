@@ -162,6 +162,12 @@ class CartItems extends HTMLElement {
       .then((state) => {
         const parsedState = JSON.parse(state);
 
+        console.log('Parsed state:');
+        console.log(parsedState);
+
+        console.log('Custom event');
+        document.dispatchEvent(new CustomEvent("cart-drawer:updated"));
+
         CartPerformance.measure(`${eventTarget}:paint-updated-sections"`, () => {
           const quantityElement =
             document.getElementById(`Quantity-${line}`) || document.getElementById(`Drawer-quantity-${line}`);
@@ -188,6 +194,7 @@ class CartItems extends HTMLElement {
               section.selector
             );
           });
+
           const updatedValue = parsedState.items[line - 1] ? parsedState.items[line - 1].quantity : undefined;
           let message = '';
           if (items.length === parsedState.items.length && updatedValue !== parseInt(quantityElement.value)) {

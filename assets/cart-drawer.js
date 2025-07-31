@@ -34,6 +34,8 @@ class CartDrawer extends HTMLElement {
       this.classList.add('animate', 'active');
     });
 
+    document.dispatchEvent(new CustomEvent('cart-drawer:opened'));
+
     this.addEventListener(
       'transitionend',
       () => {
