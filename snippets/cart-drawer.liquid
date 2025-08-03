@@ -459,6 +459,44 @@
           <div id="CartDrawer-CartErrors" role="alert"></div>
         </form>
       </cart-drawer-items>
+
+      <style>
+        .cart_upsells .product-card-wrapper {
+            min-width: 285px;
+        }
+
+        .quick-add-modal[open][data-section="upsells"] {
+          z-index: 1000;
+        }
+      </style>
+
+      <section class="shopify-section" id="shopify-section-upsells">
+        <div style="display: flex; flex-direction: column; gap: 10px; padding: 10px; background: #fdf9f9;">
+          <h4 style="margin: 0; font-weight: bold">You may also like these:</h4>
+          <div class="cart_upsells" style="display: flex; gap: 20px; overflow: scroll;">
+          {% comment %} Loop through all products in the cart {% endcomment %}
+           {% for item in cart.items %}
+              {% for upsell in item.product.metafields.custom.upsells.value %}
+                {% comment %} Check if upsell product is already in the cart {% endcomment %}
+                 {% assign upsell_aready_in_cart = cart | line_items_for: upsell %}
+                {% comment %} {{ upsell.title }} <br/> {% endcomment %}
+                  {% if upsell_aready_in_cart == blank %}
+                    {% render 'card-product',
+                      card_product: upsell,
+                      show_vendor: false,
+                      show_rating: false,
+                      skip_styles: skip_card_product_styles,
+                      quick_add: "standard",
+                      section_id: "line_item",
+                      horizontal_class: true
+                    %}
+                  {% endif %}
+              {% endfor %}
+           {% endfor %}
+           </div>
+        </div>
+      </section>
+
       <div class="drawer__footer">
         {%- if settings.show_cart_note -%}
           <details id="Details-CartDrawer">
